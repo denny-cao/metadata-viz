@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import exifread
 
+
 def focal_length(img_path: str) -> int:
     
     '''
@@ -33,14 +34,16 @@ def focal_length(img_path: str) -> int:
         return tags['EXIF FocalLength'].values[0]
 
 
-def interpolate(focal_len: list, focal_count: list) -> list:
+def interpolate(focal_len: list, focal_count: list) -> interp1d:
    
     '''
     Interpolate discrete data points
     '''
-
-    return interp1d(focal_len, focal_count, kind='quadratic')
     
+    interpolated_y = interp1d(focal_len, focal_count, kind='quadratic')
+
+    x_new = linspace(min(focal_len), max(focal_len), num=100)
+    return x_new, interpolated_y(x_new)
 
 def plot(focal_dict: defaultdict) -> None:
     
@@ -49,14 +52,11 @@ def plot(focal_dict: defaultdict) -> None:
     and plot key as x and value as y
     '''
 
-    x_discrete = list(int(x) for x in focal_dict.keys())
-    y_discrete = list(focal_dict.values())
-    
-    x_new = linspace(min(x_discrete), max(x_discrete), num=100)
-    
-    interpolated_y = interp1d(x_discrete, y_discrete, kind='quadratic')
-    y_smooth = interpolated_y(x_new)
+    x_discrete, y_discrete = zip(*focal_dict.items())
+    x_discrete = list(int(x) for x in x_discrete)
+    y_discrete = list(y_discrete)
 
+    x_new, y_smooth = interpolate(x_discrete, y_discrete)
 
     plt.plot(x_discrete, y_discrete, "o", label="discrete")
     plt.plot(x_new, y_smooth, label="quadratic interpolation")
@@ -65,7 +65,7 @@ def plot(focal_dict: defaultdict) -> None:
     plt.show()
 
 
-if __name__ == "__main__":
+def main() -> None:
     path = "/mnt/f/My Drive/Photography/2022"
 
     focal_lengths = defaultdict(int)
@@ -77,6 +77,10 @@ if __name__ == "__main__":
                 focal_lengths[foc_len] += 1
 
     plot(focal_lengths)
+
+
+if __name__ == "__main__":
+    main()
     
 
 
