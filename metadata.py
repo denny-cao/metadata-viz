@@ -34,6 +34,25 @@ def focal_length(img_path: str) -> int:
         return tags['EXIF FocalLength'].values[0]
 
 
+def round_focal(focal_len: int) -> int:
+    
+    '''
+    Round focal length to nearest typical prime lens focal lengths
+    using binary tree for O(log(log n))
+    '''
+
+    typical = {
+        18: 0,
+        24: 0,
+        35: 0,
+        55: 0,
+        85: 0,
+        105: 0,
+        135: 0,
+        200: 0,
+        300: 0
+    }
+
 def interpolate(focal_len: list, focal_count: list) -> interp1d:
    
     '''
