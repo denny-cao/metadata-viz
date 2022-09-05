@@ -77,12 +77,14 @@ class Metadata:
             300: 0
         }
 
-def interpolate(focal_len: list, focal_count: list) -> interp1d:
+    def interpolate(focal_len: list, focal_count: list) -> interp1d:
    
-    '''
-    Interpolate discrete data points
-    '''
-    
+        '''
+        Interpolate discrete data points
+        '''
+        
+        pass
+
     def apertures(self) -> float:
         
         '''
